@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	database "taskManagmentApp/pkg/db"
+	"taskManagmentApp/pkg/structures"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/jinzhu/gorm"
 )
 
 func main() {
@@ -19,6 +22,26 @@ func main() {
 	// }
 
 	// CONNECTING TO THE DATABASE
+
+	var db *gorm.DB
+
+	var databaseCreds structures.DbConfig
+
+	databaseCreds.DB_USERNAME = "postgres"
+	databaseCreds.DB_PASSWORD = "7396569423"
+	databaseCreds.DB_HOSTNAME = "127.0.0.1"
+	databaseCreds.DB_PORT = "5432"
+	databaseCreds.DB_NAME = "TaskManagmentAppDb"
+
+	db = database.ConnectToDatabase(databaseCreds)
+
+	err = db.DB().Ping()
+
+	if err != nil {
+		fmt.Println("Failed to ping the datbase : ", err)
+	} else {
+		fmt.Println("Successfully connected to the database!!")
+	}
 
 	fmt.Println("Starting server locally!!")
 	err = app.Listen(":8090")
