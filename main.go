@@ -31,7 +31,7 @@ func main() {
 	databaseCreds.DB_PASSWORD = "7396569423"
 	databaseCreds.DB_HOSTNAME = "127.0.0.1"
 	databaseCreds.DB_PORT = "5432"
-	databaseCreds.DB_NAME = "TaskManagmentAppDb"
+	databaseCreds.DB_NAME = "postgres"
 
 	db = database.ConnectToDatabase(databaseCreds)
 

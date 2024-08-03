@@ -24,7 +24,7 @@ func ConnectToDatabase(config structures.DbConfig) *gorm.DB {
 func ConnectString(config structures.DbConfig) string {
 	var str string
 
-	str = fmt.Sprintf(`host=%v port=%v user=%v dbname=%v password=%v sslmode=require`,
+	str = fmt.Sprintf(`host=%v port=%v user=%v dbname=%v password=%v sslmode=disable`,
 		config.DB_HOSTNAME,
 		config.DB_PORT,
 		config.DB_USERNAME,
