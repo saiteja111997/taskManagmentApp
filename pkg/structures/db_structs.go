@@ -21,3 +21,26 @@ type ProjectInfo struct {
 	Status      string    `gorm:"not null" json:"status"`
 	EndDate     time.Time `gorm:"default:null" json:"end_date"`
 }
+
+type Mapping struct {
+	ID         int `gorm:"primaryKey;autoIncrement" json:"id"`
+	ProjectID  int `gorm:"not null" json:"projectid"`
+	ManagerID  int `gorm:"not null" json:"manageridid"`
+	EmployeeID int `gorm:"not null" json:"employeeid"`
+}
+
+type Employees struct {
+	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
+	Name        string `gorm:"not null" json:"name"`
+	Email       string `gorm:"not null" json:"email"`
+	Designation string `gorm:"not null" json:"designation"`
+}
+
+type Task struct {
+	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
+	Name        string `gorm:"not null" json:"name"`
+	Description string `gorm:"not null" json:"description"`
+	Status      string `gorm:"not null" json:"status"`
+	EmployeeID  int    `gorm:"not null" json:"employeeid"`
+	ProjectID   int    `gorm:"not null" json:"projectid"`
+}

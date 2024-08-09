@@ -43,7 +43,7 @@ func main() {
 		fmt.Println("Successfully connected to the database!!")
 	}
 
-	db.AutoMigrate(&structures.ProjectInfo{})
+	db.AutoMigrate(&structures.ProjectInfo{}, &structures.Mapping{}, &structures.Employees{}, &structures.Task{})
 
 	fmt.Println("Starting server locally!!")
 	err = app.Listen(":8090")
