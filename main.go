@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	database "taskManagmentApp/pkg/db"
+	"taskManagmentApp/pkg/server"
 	"taskManagmentApp/pkg/structures"
 
 	"github.com/gofiber/fiber/v2"
@@ -44,6 +45,16 @@ func main() {
 	}
 
 	db.AutoMigrate(&structures.ProjectInfo{}, &structures.Mapping{}, &structures.Employees{}, &structures.Task{})
+
+	svr := server.Svr{
+		Database: db,
+	}
+
+	// var svr server.Svr
+	// svr.Database = db
+
+	// HEALTH CHECK OR HEART BEAT
+	app.Get("/healthCheck", svr.HealthCheck)
 
 	fmt.Println("Starting server locally!!")
 	err = app.Listen(":8090")
