@@ -55,6 +55,11 @@ func main() {
 
 	// HEALTH CHECK OR HEART BEAT
 	app.Get("/healthCheck", svr.HealthCheck)
+	// Payload types : JSON, XML, FORMDATA etc...
+	app.Post("/demo", svr.Demo)
+
+	// frontend => data (JSON) ([]byte)
+	//Backend => Unmarshal([]byte -> JSON) (Read keys)
 
 	fmt.Println("Starting server locally!!")
 	err = app.Listen(":8090")
