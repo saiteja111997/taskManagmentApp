@@ -55,8 +55,9 @@ func main() {
 
 	// HEALTH CHECK OR HEART BEAT
 	app.Get("/healthCheck", svr.HealthCheck)
+	app.Post("/createProject", svr.CreateProject)
 	// Payload types : JSON, XML, FORMDATA etc...
-	app.Post("/demo", svr.Demo)
+	// app.Post("/demo", svr.Demo)
 
 	// frontend => data (JSON) ([]byte)
 	//Backend => Unmarshal([]byte -> JSON) (Read keys)
