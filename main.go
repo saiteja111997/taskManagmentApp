@@ -55,7 +55,12 @@ func main() {
 
 	// HEALTH CHECK OR HEART BEAT
 	app.Get("/healthCheck", svr.HealthCheck)
+	//for creating tables and adding data into it
 	app.Post("/createProject", svr.CreateProject)
+	app.Post("/createTask", svr.CreateProject)
+	app.Post("/mapping", svr.CreateProject)
+	app.Post("/addEmployee", svr.CreateProject)
+
 	// Payload types : JSON, XML, FORMDATA etc...
 	// app.Post("/demo", svr.Demo)
 
