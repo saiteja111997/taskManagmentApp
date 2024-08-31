@@ -90,7 +90,7 @@ func (s *Svr) mapping(c *fiber.Ctx) error {
 	manager_id := c.FormValue("manager_id")
 	employee_id := c.FormValue("employee_id")
 
-	err := s.Database.Exec("INSERT INTO tasks (projectid, managerid, employeeid ) VALUES(?,?,?,?,?)", project_id, manager_id, employee_id).Error
+	err := s.Database.Exec("INSERT INTO tasks (projectid, managerid, employeeid ) VALUES(?,?,?)", project_id, manager_id, employee_id).Error
 
 	if err != nil {
 		return c.JSON(map[string]interface{}{
@@ -111,7 +111,7 @@ func (s *Svr) addEmployee(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	designation := c.FormValue("designation")
 
-	err := s.Database.Exec("INSERT INTO employees (name, email, designation) VALUES(?,?,?,?,?)", name, email, designation).Error
+	err := s.Database.Exec("INSERT INTO employees (name, email, designation) VALUES(?,?,?)", name, email, designation).Error
 
 	if err != nil {
 		return c.JSON(map[string]interface{}{
