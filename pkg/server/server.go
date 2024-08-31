@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"strconv"
+	"taskManagmentApp/pkg/structures"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -51,7 +52,7 @@ func (s *Svr) CreateProject(c *fiber.Ctx) error {
 
 	//CHECK WHETHER THE USEER IS A MANAGER
 
-	var designation int
+	var designation structures.Employee
 	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
 	if err != nil {
 		return c.JSON(map[string]interface{}{
@@ -60,7 +61,7 @@ func (s *Svr) CreateProject(c *fiber.Ctx) error {
 		})
 	}
 
-	if designation != 1 {
+	if designation.Designation != 1 {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
 			"result": "Only Managers can perform this operation",
@@ -101,8 +102,13 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 
 	//CHECK WHETHER THE USEER IS A MANAGER
 
+<<<<<<< HEAD
 	var designation int
 	err = s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId_int).Scan(&designation).Error
+=======
+	var designation structures.Employee
+	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
+>>>>>>> 94ae36cd5c7342e63e02f0a0d1c00d318f13b5a7
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
@@ -110,7 +116,7 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	if designation != 1 {
+	if designation.Designation != 1 {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
 			"result": "Only Managers can perform this operation",
@@ -200,7 +206,14 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 	designation := c.FormValue("designation")
 	userId := c.FormValue("user_id")
 
+<<<<<<< HEAD
 	userId_int, err := strconv.Atoi(userId)
+=======
+	//CHECK WHETHER THE USEER IS A MANAGER
+
+	var userDesignation structures.Employee
+	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&userDesignation).Error
+>>>>>>> 94ae36cd5c7342e63e02f0a0d1c00d318f13b5a7
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
@@ -208,6 +221,7 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 		})
 	}
 
+<<<<<<< HEAD
 	//CHECK WHETHER THE USEER IS A MANAGER
 	fmt.Println("checking the user designation :", userId)
 	var userDesignation int
@@ -220,6 +234,9 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 	}
 	fmt.Println("user designation :", userDesignation)
 	if userDesignation != 1 {
+=======
+	if userDesignation.Designation != 1 {
+>>>>>>> 94ae36cd5c7342e63e02f0a0d1c00d318f13b5a7
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
 			"result": "Only Managers can perform this operation",
