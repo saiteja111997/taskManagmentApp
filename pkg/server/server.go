@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -90,10 +91,18 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 	project_id := c.FormValue("project_id")
 	userId := c.FormValue("user_id")
 
+	userId_int, err := strconv.Atoi(userId)
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
 	//CHECK WHETHER THE USEER IS A MANAGER
 
 	var designation int
-	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
+	err = s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId_int).Scan(&designation).Error
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
@@ -191,10 +200,7 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 	designation := c.FormValue("designation")
 	userId := c.FormValue("user_id")
 
-	//CHECK WHETHER THE USEER IS A MANAGER
-
-	var userDesignation int
-	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&userDesignation).Error
+	userId_int, err := strconv.Atoi(userId)
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
@@ -202,6 +208,17 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 		})
 	}
 
+	//CHECK WHETHER THE USEER IS A MANAGER
+	fmt.Println("checking the user designation :", userId)
+	var userDesignation int
+	err = s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId_int).Scan(&userDesignation).Error
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err.Error(),
+		})
+	}
+	fmt.Println("user designation :", userDesignation)
 	if userDesignation != 1 {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
