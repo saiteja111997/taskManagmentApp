@@ -48,7 +48,25 @@ func (s *Svr) CreateProject(c *fiber.Ctx) error {
 	startDate := time.Now()
 	userId := c.FormValue("user_id")
 
-	err := s.Database.Exec("INSERT INTO project_infos (name, description, category, status, start_date) VALUES(?,?,?,?,?)", name, description, category, status, startDate).Error
+	//CHECK WHETHER THE USEER IS A MANAGER
+
+	var designation int
+	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
+	if designation != 1 {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": "Only Managers can perform this operation",
+		})
+	}
+
+	err = s.Database.Exec("INSERT INTO project_infos (name, description, category, status, start_date) VALUES(?,?,?,?,?)", name, description, category, status, startDate).Error
 
 	if err != nil {
 		return c.JSON(map[string]interface{}{
@@ -70,6 +88,25 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 	status := c.FormValue("status")
 	employee_id := c.FormValue("employee_id")
 	project_id := c.FormValue("project_id")
+	userId := c.FormValue("user_id")
+
+	//CHECK WHETHER THE USEER IS A MANAGER
+
+	var designation int
+	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
+	if designation != 1 {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": "Only Managers can perform this operation",
+		})
+	}
 
 	employee_id_int, err := strconv.Atoi(employee_id)
 	if err != nil {
@@ -152,6 +189,25 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 	name := c.FormValue("name")
 	email := c.FormValue("email")
 	designation := c.FormValue("designation")
+	userId := c.FormValue("user_id")
+
+	//CHECK WHETHER THE USEER IS A MANAGER
+
+	var userDesignation int
+	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&userDesignation).Error
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
+	if userDesignation != 1 {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": "Only Managers can perform this operation",
+		})
+	}
 
 	designation_int, err := strconv.Atoi(designation)
 	if err != nil {
