@@ -102,10 +102,8 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 
 	//CHECK WHETHER THE USEER IS A MANAGER
 
-	var designation int
-	err = s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId_int).Scan(&designation).Error
 	var designation structures.Employee
-	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
+	err = s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId_int).Scan(&designation).Error
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
@@ -203,10 +201,7 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 	designation := c.FormValue("designation")
 	userId := c.FormValue("user_id")
 
-	//CHECK WHETHER THE USEER IS A MANAGER
-
-	var userDesignation structures.Employee
-	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&userDesignation).Error
+	userId_int, err := strconv.Atoi(userId)
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
@@ -215,17 +210,16 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 	}
 
 	//CHECK WHETHER THE USEER IS A MANAGER
-	fmt.Println("checking the user designation :", userId)
-	var userDesignation int
+
+	var userDesignation structures.Employee
 	err = s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId_int).Scan(&userDesignation).Error
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
-			"result": err.Error(),
+			"result": err,
 		})
 	}
 	fmt.Println("user designation :", userDesignation)
-	if userDesignation != 1 {
 	if userDesignation.Designation != 1 {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
