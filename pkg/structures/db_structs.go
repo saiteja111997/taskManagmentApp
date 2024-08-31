@@ -29,11 +29,11 @@ type Mapping struct {
 	EmployeeID int `gorm:"not null" json:"employeeid"`
 }
 
-type Employees struct {
+type Employee struct {
 	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
 	Name        string `gorm:"not null" json:"name"`
 	Email       string `gorm:"not null" json:"email"`
-	Designation string `gorm:"not null" json:"designation"`
+	Designation int    `gorm:"not null" json:"designation"`
 }
 
 type Task struct {

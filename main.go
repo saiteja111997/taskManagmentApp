@@ -44,7 +44,7 @@ func main() {
 		fmt.Println("Successfully connected to the database!!")
 	}
 
-	db.AutoMigrate(&structures.ProjectInfo{}, &structures.Mapping{}, &structures.Employees{}, &structures.Task{})
+	db.AutoMigrate(&structures.ProjectInfo{}, &structures.Mapping{}, &structures.Employee{}, &structures.Task{})
 
 	svr := server.Svr{
 		Database: db,
@@ -57,9 +57,9 @@ func main() {
 	app.Get("/healthCheck", svr.HealthCheck)
 	//for creating tables and adding data into it
 	app.Post("/createProject", svr.CreateProject)
-	app.Post("/createTask", svr.CreateProject)
-	app.Post("/mapping", svr.CreateProject)
-	app.Post("/addEmployee", svr.CreateProject)
+	app.Post("/createTask", svr.CreateTask)
+	app.Post("/mapping", svr.CreateMapping)
+	app.Post("/addEmployee", svr.AddEmployee)
 
 	// Payload types : JSON, XML, FORMDATA etc...
 	// app.Post("/demo", svr.Demo)
