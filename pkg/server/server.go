@@ -2,6 +2,7 @@ package server
 
 import (
 	"strconv"
+	"taskManagmentApp/pkg/structures"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -50,7 +51,7 @@ func (s *Svr) CreateProject(c *fiber.Ctx) error {
 
 	//CHECK WHETHER THE USEER IS A MANAGER
 
-	var designation int
+	var designation structures.Employee
 	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
 	if err != nil {
 		return c.JSON(map[string]interface{}{
@@ -59,7 +60,7 @@ func (s *Svr) CreateProject(c *fiber.Ctx) error {
 		})
 	}
 
-	if designation != 1 {
+	if designation.Designation != 1 {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
 			"result": "Only Managers can perform this operation",
@@ -92,7 +93,7 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 
 	//CHECK WHETHER THE USEER IS A MANAGER
 
-	var designation int
+	var designation structures.Employee
 	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&designation).Error
 	if err != nil {
 		return c.JSON(map[string]interface{}{
@@ -101,7 +102,7 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	if designation != 1 {
+	if designation.Designation != 1 {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
 			"result": "Only Managers can perform this operation",
@@ -193,7 +194,7 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 
 	//CHECK WHETHER THE USEER IS A MANAGER
 
-	var userDesignation int
+	var userDesignation structures.Employee
 	err := s.Database.Raw("SELECT designation FROM employees WHERE id = ?", userId).Scan(&userDesignation).Error
 	if err != nil {
 		return c.JSON(map[string]interface{}{
@@ -202,7 +203,7 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 		})
 	}
 
-	if userDesignation != 1 {
+	if userDesignation.Designation != 1 {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
 			"result": "Only Managers can perform this operation",
