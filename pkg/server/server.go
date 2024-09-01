@@ -249,3 +249,15 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 		"result": "Successfully inserted into the database",
 	})
 }
+
+func (s *Svr) TaskStatus(c *fiber.Ctx) error {
+	task_id := c.FormValue("task_id")
+
+	task_id_int, err := strcnov.Atoi(task_id)
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+}
