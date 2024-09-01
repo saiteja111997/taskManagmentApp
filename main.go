@@ -60,6 +60,9 @@ func main() {
 	app.Post("/createTask", svr.CreateTask)
 	app.Post("/mapping", svr.CreateMapping)
 	app.Post("/addEmployee", svr.AddEmployee)
+	app.Post("/getTaskStatus", svr.TaskStatus)
+	app.Post("/updateTaskStatus", svr.UpdateTaskStatus)
+	app.Get("/getEmployees", svr.GetEmployees)
 
 	// Payload types : JSON, XML, FORMDATA etc...
 	// app.Post("/demo", svr.Demo)

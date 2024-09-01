@@ -253,11 +253,77 @@ func (s *Svr) AddEmployee(c *fiber.Ctx) error {
 func (s *Svr) TaskStatus(c *fiber.Ctx) error {
 	task_id := c.FormValue("task_id")
 
-	task_id_int, err := strcnov.Atoi(task_id)
+	task_id_int, err := strconv.Atoi(task_id)
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
 			"result": err,
 		})
 	}
+
+	var task structures.Task
+
+	err = s.Database.Raw("SELECT * FROM tasks WHERE id =?", task_id_int).Scan(&task).Error
+
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
+	return c.JSON(map[string]interface{}{
+		"Status": "OK",
+		"result": task.Status,
+	})
+}
+
+func (s *Svr) UpdateTaskStatus(c *fiber.Ctx) error {
+
+	task_id := c.FormValue("task_id")
+	status := c.FormValue("status")
+
+	task_id_int, err := strconv.Atoi(task_id)
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
+	// UPDATE tasks SET status = 'Read from the frontend' WHERE task_id = 'task id from frontend';
+	err = s.Database.Model(structures.Task{}).Where("id = ?", task_id_int).Update("status", status).Error
+
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
+	return c.JSON(map[string]interface{}{
+		"Status": "OK",
+		"result": "Task status updated successfully",
+	})
+
+}
+
+func (s *Svr) GetEmployees(c *fiber.Ctx) error {
+
+	var employeeList []structures.Employee
+
+	err := s.Database.Raw("SELECT * FROM employees").Scan(&employeeList).Error
+
+	if err != nil {
+		return c.JSON(map[string]interface{}{
+			"Status": "!OK",
+			"result": err,
+		})
+	}
+
+	return c.JSON(map[string]interface{}{
+		"Status": "OK",
+		"result": employeeList,
+	})
+
 }
