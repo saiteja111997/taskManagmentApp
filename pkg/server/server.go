@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"taskManagmentApp/pkg/structures"
+	"taskManagmentApp/pkg/utilities"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -92,7 +93,8 @@ func (s *Svr) CreateTask(c *fiber.Ctx) error {
 	project_id := c.FormValue("project_id")
 	userId := c.FormValue("user_id")
 
-	userId_int, err := strconv.Atoi(userId)
+	userId_int, err := utilities.ConvertToInt(userId)
+
 	if err != nil {
 		return c.JSON(map[string]interface{}{
 			"Status": "!OK",
