@@ -1,0 +1,30 @@
+service: throttle-backend-apis
+frameworkVersion: '>=1.28.0'
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: us-east-1
+  stage: ${opt:stage}
+
+functions:
+  CreateProject:
+    handler: bin/createProject/main
+    events:
+      - http:
+          path: /createProject
+          method: POST
+  
+package:
+  patterns:
+    - '!*/**'
+    - bin/**
+
+plugins:
+  - serverless-offline
+ 
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+
+
