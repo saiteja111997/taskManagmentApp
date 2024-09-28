@@ -2,11 +2,19 @@ package main
 
 import (
 	"context"
+
 	"fmt"
+	"log"
+	"net"
+	"os"
 	database "taskManagmentApp/pkg/db"
 	"taskManagmentApp/pkg/server"
 	"taskManagmentApp/pkg/structures"
 	"taskManagmentApp/pkg/utilities"
+	"time"
+
+	"github.com/joho/godotenv"
+	"github.com/pkg/errors"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -24,11 +32,16 @@ func main() {
 	app := fiber.New()
 	var err error
 
+	err = godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading environment variables file")
+	}
+
 	//WAITING FOR THE HOST
 
-	// if err := waitForHost("mydbinstance.c1cnaivzlk0f.us-east-1.rds.amazonaws.com", "5432"); err != nil {
-	// 	log.Fatalln(err)
-	// }
+	if err := waitForHost("database-1.cvq6si8o4cx4.eu-north-1.rds.amazonaws.com", "5432"); err != nil {
+		log.Fatalln(err)
+	}
 
 	// CONNECTING TO THE DATABASE
 
@@ -36,11 +49,11 @@ func main() {
 
 	var databaseCreds structures.DbConfig
 
-	databaseCreds.DB_USERNAME = "postgres"
-	databaseCreds.DB_PASSWORD = "7396569423"
-	databaseCreds.DB_HOSTNAME = "127.0.0.1"
-	databaseCreds.DB_PORT = "5432"
-	databaseCreds.DB_NAME = "postgres"
+	databaseCreds.DB_USERNAME = os.Getenv("DB_USERNAME")
+	databaseCreds.DB_PASSWORD = os.Getenv("DB_PASSWORD")
+	databaseCreds.DB_HOSTNAME = os.Getenv("DB_HOSTNAME")
+	databaseCreds.DB_PORT = os.Getenv("DB_PORT")
+	databaseCreds.DB_NAME = os.Getenv("DATABASE")
 
 	db = database.ConnectToDatabase(databaseCreds)
 
@@ -106,24 +119,24 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	return response, err
 }
 
-// func waitForHost(host, port string) error {
-// 	timeOut := time.Second
+func waitForHost(host, port string) error {
+	timeOut := time.Second
 
-// 	if host == "" {
-// 		return errors.Errorf("unable to connect to %v:%v", host, port)
-// 	}
+	if host == "" {
+		return errors.Errorf("unable to connect to %v:%v", host, port)
+	}
 
-// 	for i := 0; i < 60; i++ {
-// 		fmt.Printf("waiting for %v:%v ...\n", host, port)
-// 		conn, err := net.DialTimeout("tcp", host+":"+port, timeOut)
-// 		if err == nil {
-// 			fmt.Println("done!")
-// 			conn.Close()
-// 			return nil
-// 		}
+	for i := 0; i < 60; i++ {
+		fmt.Printf("waiting for %v:%v ...\n", host, port)
+		conn, err := net.DialTimeout("tcp", host+":"+port, timeOut)
+		if err == nil {
+			fmt.Println("done!")
+			conn.Close()
+			return nil
+		}
 
-// 		time.Sleep(time.Second)
-// 	}
+		time.Sleep(time.Second)
+	}
 
-// 	return errors.Errorf("timeout attempting to connect to %v:%v", host, port)
-// }
+	return errors.Errorf("timeout attempting to connect to %v:%v", host, port)
+}
