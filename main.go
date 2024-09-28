@@ -37,12 +37,6 @@ func main() {
 		log.Fatalf("Error loading environment variables file")
 	}
 
-	//WAITING FOR THE HOST
-
-	if err := waitForHost("database-1.cvq6si8o4cx4.eu-north-1.rds.amazonaws.com", "5432"); err != nil {
-		log.Fatalln(err)
-	}
-
 	// CONNECTING TO THE DATABASE
 
 	var db *gorm.DB
@@ -54,6 +48,12 @@ func main() {
 	databaseCreds.DB_HOSTNAME = os.Getenv("DB_HOSTNAME")
 	databaseCreds.DB_PORT = os.Getenv("DB_PORT")
 	databaseCreds.DB_NAME = os.Getenv("DATABASE")
+
+	//WAITING FOR THE HOST
+
+	if err := waitForHost(os.Getenv("DB_HOSTNAME"), "5432"); err != nil {
+		log.Fatalln(err)
+	}
 
 	db = database.ConnectToDatabase(databaseCreds)
 
