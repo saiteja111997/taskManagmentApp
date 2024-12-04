@@ -1,0 +1,96 @@
+service: taskmanagementApp
+
+provider:
+  name: aws
+  runtime: provided.al2
+  region: us-east-1
+  stage: ${opt:stage}
+  environment: ${file(env.json)}
+  httpApi:
+    cors: true
+
+functions:
+  ServerHealthCheck:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /healthCheck
+          method: GET
+          cors: true
+
+  CreateProject:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /createProject
+          method: POST
+          cors: true
+
+  CreateTask:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /createTask
+          method: POST
+          cors: true
+
+  Mapping:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /mapping
+          method: POST
+          cors: true
+
+  AddEmployee:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /addEmployee
+          method: POST
+          cors: true
+
+  GetTaskStatus:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /getTaskStatus
+          method: POST
+          cors: true
+
+  UpdateTaskStatus:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /updateTaskStatus
+          method: POST
+          cors: true
+
+  GetEmployees:
+    handler: bootstrap
+    timeout: 300
+    events:
+      - http:
+          path: /getEmployees
+          method: GET
+          cors: true
+
+package:
+  patterns:
+    - '!*/**'
+    - bin/**
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+
